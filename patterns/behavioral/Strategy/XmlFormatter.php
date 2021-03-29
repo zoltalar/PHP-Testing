@@ -13,7 +13,7 @@ class XmlFormatter implements Formatter
         return $xml->asXML();
     }
 
-    protected function add(array $data, SimpleXMLElement  $xml)
+    protected function add(array $data, SimpleXMLElement $xml)
     {
         foreach ($data as $key => $value) {
             is_array($value)
