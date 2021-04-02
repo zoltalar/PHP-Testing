@@ -15,12 +15,6 @@ class RegistrationFlow
     /** @var Employee */
     protected $employee;
 
-    /** @var Dependent[] */
-    protected $dependents = [];
-
-    /** @var Appointment[] */
-    protected $appointments = [];
-
     public function __construct(Config $config)
     {
         $this->config = $config;
@@ -45,5 +39,10 @@ class RegistrationFlow
     public function addStep(Step $step)
     {
         $this->steps[] = $step;
+    }
+
+    public function getDependents()
+    {
+        return $this->employee->dependents->find_all();
     }
 }
