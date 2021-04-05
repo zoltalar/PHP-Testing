@@ -6,7 +6,7 @@ class OverviewStep extends Step
 {
     protected $name = 'overview';
 
-    public function isCompleted(): bool
+    public function isDone(): bool
     {
         return true;
     }

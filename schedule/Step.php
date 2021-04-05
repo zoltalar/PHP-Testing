@@ -7,12 +7,16 @@ abstract class Step
     /** @var Config */
     protected $config;
 
+    /** @var Employee */
+    protected $employee;
+
     /** @var string */
     protected $name;
 
-    public function __construct(Config $config)
+    public function __construct(Config $config, EmployeeStep $employee)
     {
         $this->config = $config;
+        $this->employee = $employee;
     }
 
     public function getName(): string
@@ -20,7 +24,12 @@ abstract class Step
         return $this->name;
     }
 
-    public function isCompleted(): bool
+    public function isActive(): bool
+    {
+        return $this->getName() === Request::initial()->action();
+    }
+
+    public function isDone(): bool
     {
         return false;
     }

@@ -4,11 +4,11 @@ namespace Schedule;
 
 class EmployeeStep extends Step
 {
-    protected $name = 'overview';
+    protected $name = 'employee';
 
-    public function isCompleted(): bool
+    public function isDone(): bool
     {
-        return true;
+        return $this->employee->loaded();
     }
 
     public function render()
