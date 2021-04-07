@@ -2,8 +2,13 @@
 
 namespace Schedule;
 
-class RegistrationFlow
+use Schedule\Contracts\Stepable as StepableContract;
+use Schedule\Traits\Stepable;
+
+class RegistrationFlow implements StepableContract
 {
+    use Stepable;
+
     const TYPE_NEW = 'new';
     const TYPE_MODIFY = 'modify';
 
@@ -14,9 +19,6 @@ class RegistrationFlow
 
     /** @var Config */
     protected $config;
-
-    /** @var Step[] */
-    protected $steps = [];
 
     /** @var Employee */
     protected $employee;
@@ -36,25 +38,32 @@ class RegistrationFlow
 
     protected function addSteps()
     {
+        $type = $this->type;
         $config = $this->config;
         $employee = $this->employee;
 
-        $this->addStep(new OverviewStep($config, $employee));
-        $this->addStep(new EmployeeStep($config, $employee));
-        $this->addStep(new DependentsStep($config, $employee));
-        $this->addStep(new AppointmentsStep($config, $employee));
+        $this->addStep(new OverviewStep($type, $config, $employee));
+        $this->addStep(new EmployeeStep($type, $config, $employee));
+        $this->addStep(new DependentsStep($type, $config, $employee));
+        $this->addStep(new AppointmentsStep($type, $config, $employee));
 
         if ( (int) $this->config->enable_downloads == 1) {
-            $this->addStep(new DownloadStep($config, $employee));
+            $this->addStep(new DownloadStep($type, $config, $employee));
         }
 
-        $this->addStep(new SummaryStep($config, $employee));
-        $this->addStep(new ConfirmationStep($config, $employee));
+        $this->addStep(new SummaryStep($type, $config, $employee));
+        $this->addStep(new ConfirmationStep($type, $config, $employee));
     }
 
-    public function addStep(Step $step)
+    public function getCurrentStep(): ?Step
     {
-        $this->steps[] = $step;
+        foreach ($this->steps as $step) {
+            if ($step->isCurrent()) {
+                return $step;
+            }
+        }
+
+        return null;
     }
 
     public function isDone()

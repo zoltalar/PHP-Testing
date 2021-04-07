@@ -2,6 +2,8 @@
 
 namespace Schedule;
 
+use Schedule\Step;
+
 class EmployeeStep extends Step
 {
     protected $name = 'employee';
@@ -13,6 +15,6 @@ class EmployeeStep extends Step
 
     public function render()
     {
-        return View::factory('schedule/new/employee');
+        return View::factory("schedule/{$this->type}/employee");
     }
 }
