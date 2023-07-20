@@ -17,4 +17,9 @@ class EmployeeStep extends Step
     {
         return View::factory("schedule/{$this->type}/employee");
     }
+
+    public function store()
+    {
+        Session::instance()->set('ap_schedule_employee', $this->employee->as_array());
+    }
 }

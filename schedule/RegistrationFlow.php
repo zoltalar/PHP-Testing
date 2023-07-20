@@ -55,15 +55,35 @@ class RegistrationFlow implements StepableContract
         $this->addStep(new ConfirmationStep($type, $config, $employee));
     }
 
-    public function getCurrentStep(): ?Step
+    public function currentStep(): array
     {
-        foreach ($this->steps as $step) {
+        foreach ($this->steps as $i => $step) {
             if ($step->isCurrent()) {
-                return $step;
+                return [$i, $step];
             }
         }
 
-        return null;
+        return [null, null];
+    }
+
+    public function nextStep(): array
+    {
+        $i = $this->currentStep()[0];
+
+        if (isset($this->steps[$i+1]))
+            return [$i+1, $this->steps[$i+1]];
+
+        return [null, null];
+    }
+
+    public function previousStep(): array
+    {
+        $i = $this->currentStep()[0];
+
+        if (isset($this->steps[$i-1]))
+            return [$i-1, $this->steps[$i-1]];
+
+        return [null, null];
     }
 
     public function isDone()

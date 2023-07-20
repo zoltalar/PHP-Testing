@@ -7,10 +7,11 @@ use Schedule\Step;
 trait Stepable
 {
     protected $steps = [];
+    protected $index = 0;
 
     public function addStep(Step $step)
     {
-        $this->steps[] = $step;
+        $this->steps[$this->index++] = $step;
     }
 
     public function getSteps(): array

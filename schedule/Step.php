@@ -56,4 +56,5 @@ abstract class Step implements StepableContract
     }
 
     abstract public function render();
+    abstract public function store();
 }
