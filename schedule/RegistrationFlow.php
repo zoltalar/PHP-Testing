@@ -7,10 +7,22 @@ final class RegistrationFlow
     
     public function __construct()
     {        
-        $this->session = $_SESSION;
+        $this->session = $_SESSION;        
+        $this->build();
+    }
+    
+    private function build(): void
+    {
+        $company = Registry::get('company');
+        $substeps = [];
         
         $this->addStep(new OverviewStep());
-        $this->addStep(new EmployeeStep());
+        
+        if ($company->hasDisclaimer()) {
+            $substeps[] = new EmployeeDisclaimerStep();
+        }
+        
+        $this->addStep(new EmployeeStep($substeps));
     }
     
     private function addStep(Stepable $step)
@@ -25,5 +37,10 @@ final class RegistrationFlow
     public function getSteps(): array
     {
         return $this->steps;
+    }
+    
+    public function hasStep(string $name)
+    {
+        return array_key_exists($name, array_keys($this->steps));
     }
 }

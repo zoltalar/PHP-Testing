@@ -6,9 +6,10 @@ abstract class BaseStep
     protected string $name = '';
     protected array $substeps = [];
     
-    public function __construct() 
+    public function __construct(array $substeps = []) 
     {
         $this->session = $_SESSION;
+        $this->substeps = $substeps;
     }
 
     public function isCurrent(): bool

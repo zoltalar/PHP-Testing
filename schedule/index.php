@@ -10,6 +10,7 @@ require 'Employee.php';
 require 'RegistrationFlow.php';
 require 'Registry.php';
 require 'Stepable.php';
+require 'DependentsStep.php';
 require 'EmployeeStep.php';
 require 'EmployeeDisclaimerStep.php';
 require 'OverviewStep.php';
@@ -22,3 +23,5 @@ $flow = new RegistrationFlow();
 foreach ($flow->getSteps() as $step) {
     echo '<p>' . $step->getName() . ': ' . var_export($step->isDone(), true) . '</p>';
 }
+
+print_r($flow->getSteps());

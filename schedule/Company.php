@@ -25,4 +25,9 @@ final class Company
     {
         return true;
     }
+    
+    public function registerDependents(): bool
+    {
+        return true;
+    }
 }
