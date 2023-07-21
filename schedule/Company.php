@@ -20,4 +20,9 @@ final class Company
     {
         return $this->name;
     }
+    
+    public function hasDisclaimer(): bool
+    {
+        return true;
+    }
 }

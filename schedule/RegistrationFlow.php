@@ -1,11 +1,14 @@
 <?php
 
-class RegistrationFlow 
+final class RegistrationFlow
 {
+    private array $session = [];
     private array $steps = [];
     
     public function __construct()
     {        
+        $this->session = $_SESSION;
+        
         $this->addStep(new OverviewStep());
         $this->addStep(new EmployeeStep());
     }
@@ -13,7 +16,7 @@ class RegistrationFlow
     private function addStep(Stepable $step)
     {
         if (array_key_exists($step->getName(), $this->steps)) {
-            throw new \Exception('Step already exists in the flow!');
+            throw new \Exception('Step already defined in the flow!');
         }
         
         $this->steps[$step->getName()] = $step;
