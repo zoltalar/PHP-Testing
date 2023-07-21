@@ -1,26 +1,18 @@
 <?php
 
-namespace Schedule;
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-use Schedule\Model\Company;
+require 'BaseStep.php';
+require 'Company.php';
+require 'Employee.php';
+require 'RegistrationFlow.php';
+require 'Registry.php';
+require 'Stepable.php';
+require 'EmployeeStep.php';
+require 'OverviewStep.php';
 
-$config = new Config(new Company(1, 'AbbVie'));
-$employee = new Employee(1, 'John Smith');
-$flow = new RegistrationFlow('new', $config, $employee);
+Registry::set('company', new Company('Oracle'));
 
-$step = $flow->currentStep()[1];
-
-if ($step->getName() == 'disclaimer')
-{
-    if (HTTP_Request::POST == $this->request->method())
-    {
-        $employee = ORM::factory('Employee')
-            ->values($this->request->post())
-            ->save();
-
-        if ($employee->saved())
-        {
-            $step->store();
-        }
-    }
-}
+$flow = new RegistrationFlow();
+print_r($flow->getSteps());

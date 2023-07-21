@@ -1,106 +1,26 @@
 <?php
 
-namespace Schedule;
-
-use Schedule\Contracts\Stepable as StepableContract;
-use Schedule\Traits\Stepable;
-
-class RegistrationFlow implements StepableContract
+class RegistrationFlow 
 {
-    use Stepable;
-
-    const TYPE_NEW = 'new';
-    const TYPE_MODIFY = 'modify';
-
-    const TYPES = [
-        self::TYPE_NEW,
-        self::TYPE_MODIFY
-    ];
-
-    /** @var Config */
-    protected $config;
-
-    /** @var Employee */
-    protected $employee;
-
-    public function __construct(string $type, Config $config, Employee $employee)
+    private array $steps = [];
+    
+    public function __construct()
+    {        
+        $this->addStep(new OverviewStep());
+        $this->addStep(new EmployeeStep());
+    }
+    
+    private function addStep(Stepable $step)
     {
-        if ( ! in_array($type, self::TYPES)) {
-            throw new \Exception("{$type} type not supported");
+        if (array_key_exists($step->getName(), $this->steps)) {
+            throw new \Exception('Step already exists in the flow!');
         }
-
-        $this->type = $type;
-        $this->config = $config;
-        $this->employee = $employee;
-
-        $this->addSteps();
+        
+        $this->steps[$step->getName()] = $step;
     }
-
-    protected function addSteps()
+    
+    public function getSteps(): array
     {
-        $type = $this->type;
-        $config = $this->config;
-        $employee = $this->employee;
-
-        $this->addStep(new OverviewStep($type, $config, $employee));
-        $this->addStep(new EmployeeStep($type, $config, $employee));
-        $this->addStep(new DependentsStep($type, $config, $employee));
-        $this->addStep(new AppointmentsStep($type, $config, $employee));
-
-        if ( (int) $this->config->enable_downloads == 1) {
-            $this->addStep(new DownloadStep($type, $config, $employee));
-        }
-
-        $this->addStep(new SummaryStep($type, $config, $employee));
-        $this->addStep(new ConfirmationStep($type, $config, $employee));
-    }
-
-    public function currentStep(): array
-    {
-        foreach ($this->steps as $i => $step) {
-            if ($step->isCurrent()) {
-                return [$i, $step];
-            }
-        }
-
-        return [null, null];
-    }
-
-    public function nextStep(): array
-    {
-        $i = $this->currentStep()[0];
-
-        if (isset($this->steps[$i+1]))
-            return [$i+1, $this->steps[$i+1]];
-
-        return [null, null];
-    }
-
-    public function previousStep(): array
-    {
-        $i = $this->currentStep()[0];
-
-        if (isset($this->steps[$i-1]))
-            return [$i-1, $this->steps[$i-1]];
-
-        return [null, null];
-    }
-
-    public function isDone()
-    {
-        $i = 1;
-
-        foreach ($this->steps as $step) {
-            if ($step->isDone()) {
-                $i++;
-            }
-        }
-
-        return $i = count($this->steps);
-    }
-
-    public function getDependents()
-    {
-        return $this->employee->dependents->find_all();
+        return $this->steps;
     }
 }

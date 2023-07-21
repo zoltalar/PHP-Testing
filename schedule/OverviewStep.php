@@ -1,24 +1,11 @@
 <?php
 
-namespace Schedule;
-
-use Schedule\Step;
-
-class OverviewStep extends Step
+class OverviewStep extends BaseStep implements Stepable
 {
-    protected $name = 'overview';
+    protected string $name = 'overview';
 
     public function isDone(): bool
     {
         return true;
-    }
-
-    public function render()
-    {
-        $view = View::factory("schedule/{$this->type}/overview");
-
-        $view->employee = $this->employee;
-
-        return $view;
     }
 }
