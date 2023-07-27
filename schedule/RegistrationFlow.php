@@ -7,7 +7,7 @@ final class RegistrationFlow
     
     public function __construct()
     {        
-        $this->session = $_SESSION;        
+        $this->session = $_SESSION;
         $this->build();
     }
     
